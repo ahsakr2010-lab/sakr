@@ -13,14 +13,14 @@
     }
 
     body {
-      /* تعديل صيغة الملف إلى bg.png لتطابق الصورة المرفوعة على GitHub */
-      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('IMG20260609224534.jpg') no-repeat center center fixed;
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('IMG20260609224534.jpg') no-repeat center center fixed;
       background-size: cover;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      cursor: pointer;
     }
 
     .card {
@@ -31,9 +31,16 @@
       border-radius: 20px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
       text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.4);
+      cursor: default;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* كلاس لإخفاء الكارت */
+    .card.hidden {
+      display: none;
     }
 
     h2 {
@@ -64,12 +71,11 @@
 
     .wheel-container {
       position: relative;
-      width: 280px;
-      height: 280px;
+      width: 260px;
+      height: 260px;
       margin: 0 auto 20px auto;
     }
 
-    /* السهم العلوي */
     .pointer {
       position: absolute;
       top: -12px;
@@ -130,14 +136,14 @@
 </head>
 <body>
 
-  <div class="card">
+  <div class="card" id="mainCard">
     <h2>قرعة مين هيتفشخ 🎯</h2>
     
     <textarea id="namesInput" placeholder="اكتب الأسماء هنا (كل اسم في سطر)..."></textarea>
     
     <div class="wheel-container">
       <div class="pointer"></div>
-      <canvas id="wheelCanvas" width="280" height="280"></canvas>
+      <canvas id="wheelCanvas" width="260" height="260"></canvas>
     </div>
 
     <button id="spinBtn" onclick="spinWheel()">لف العجلة واعرف مين هيتفشخ!</button>
@@ -146,11 +152,19 @@
   </div>
 
   <script>
+    const card = document.getElementById('mainCard');
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     const namesInput = document.getElementById('namesInput');
     const spinBtn = document.getElementById('spinBtn');
     const resultDisplay = document.getElementById('resultDisplay');
+
+    // إخفاء وإظهار الكارت عند الضغط خارج المساحة الخاصة به
+    document.addEventListener('click', (e) => {
+      if (!card.contains(e.target)) {
+        card.classList.toggle('hidden');
+      }
+    });
 
     const colors = ['#f87171', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa', '#f472b6', '#fb923c', '#4ade80'];
 
@@ -169,13 +183,13 @@
 
       if (names.length === 0) {
         ctx.beginPath();
-        ctx.arc(140, 140, 130, 0, 2 * Math.PI);
+        ctx.arc(130, 130, 120, 0, 2 * Math.PI);
         ctx.fillStyle = '#e2e8f0';
         ctx.fill();
         ctx.fillStyle = '#64748b';
         ctx.font = '16px system-ui';
         ctx.textAlign = 'center';
-        ctx.fillText('هتستعبط', 140, 145);
+        ctx.fillText('هتستعبط', 130, 135);
         return;
       }
 
@@ -184,25 +198,23 @@
       names.forEach((name, index) => {
         const angle = currentAngle + index * arcSize;
 
-        // رسم قطاعات العجلة
         ctx.beginPath();
         ctx.fillStyle = colors[index % colors.length];
-        ctx.moveTo(140, 140);
-        ctx.arc(140, 140, 130, angle, angle + arcSize);
-        ctx.lineTo(140, 140);
+        ctx.moveTo(130, 130);
+        ctx.arc(130, 130, 120, angle, angle + arcSize);
+        ctx.lineTo(130, 130);
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // كتابة الأسماء
         ctx.save();
-        ctx.translate(140, 140);
+        ctx.translate(130, 130);
         ctx.rotate(angle + arcSize / 2);
         ctx.textAlign = 'right';
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 15px system-ui';
-        ctx.fillText(name, 110, 5);
+        ctx.fillText(name, 100, 5);
         ctx.restore();
       });
     }
