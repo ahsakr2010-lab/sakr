@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار اسم ابن المحظوظة</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: 
+            margin: 0;
+            padding: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            resize: none;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>قرعة مين هيتفشخ</h2>
+        <textarea id="namesInput" placeholder="اكتب الأسماء هنا، واجعل كل اسم في سطر جديد..."></textarea>
+        <button onclick="pickRandomName()">اختر مين هيتفشخ</button>
+        <div class="result" id="resultOutput"></div>
+    </div>
+
+    <script>
+        function pickRandomName() {
+            const input = document.getElementById('namesInput').value;
+            // تقسيم النص إلى مصفوفة بناءً على الأسطر، مع إزالة المسافات الفارغة والأسطر الفارغة
+            const names = input.split('\n').map(name => name.trim()).filter(name => name !== '');
+            
+            const outputDiv = document.getElementById('resultOutput');
+
+            if (names.length === 0) {
+                outputDiv.textContent = 'هتسطعبت عليا';
+                outputDiv.style.color = '#f44336';
+                return;
+            }
+
+            // اختيار اسم عشوائي
+            const randomIndex = Math.floor(Math.random() * names.length);
+            const winner = names[randomIndex];
+
+            outputDiv.style.color = '#2196F3';
+            outputDiv.textContent = `ابن المحظوظة هو: ${winner}`;
+        }
+    </script>
+
+</body>
+</html>
