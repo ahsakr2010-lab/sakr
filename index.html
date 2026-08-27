@@ -38,7 +38,6 @@
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
-    /* كلاس لإخفاء الكارت */
     .card.hidden {
       display: none;
     }
@@ -171,7 +170,17 @@
     let currentAngle = 0;
     let isSpinning = false;
 
-    namesInput.addEventListener('input', drawWheel);
+    // تحميل الأسماء المحفوظة سابقاً إن وجدت
+    const savedNames = localStorage.getItem('sakr_wheel_names');
+    if (savedNames) {
+      namesInput.value = savedNames;
+    }
+
+    // حفظ الأسماء ورسم العجلة فور كتابة أي حرف
+    namesInput.addEventListener('input', () => {
+      localStorage.setItem('sakr_wheel_names', namesInput.value);
+      drawWheel();
+    });
 
     function getNames() {
       return namesInput.value.split('\n').map(name => name.trim()).filter(name => name !== '');
