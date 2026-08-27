@@ -124,7 +124,7 @@
       <canvas id="wheelCanvas" width="300" height="300"></canvas>
     </div>
 
-    <button id="spinBtn" onclick="spinWheel()">لف العجلة واختر!</button>
+    <button id="spinBtn" onclick="spinWheel()">لف العجلة واخترمين هيتفشخ !</button>
 
     <div class="result" id="resultDisplay"></div>
   </div>
@@ -203,7 +203,7 @@
       resultDisplay.innerText = '';
 
       const spinAngle = Math.random() * 10 + 20; // زاوية سرعة الدوران
-      const spinTimeTotal = Math.random() * 3000 + 4000; // وقت الدوران (4-7 ثوانٍ)
+      const spinTimeTotal = Math.random() * 8000 + 12000; // وقت الدوران (4-7 ثوانٍ)
       let spinTime = 0;
 
       function rotate() {
@@ -239,7 +239,7 @@
       const winningIndex = Math.floor(normalizedAngle / arcSize);
       const winner = names[winningIndex];
 
-      resultDisplay.innerText = `🎉 الفائز هو: ${winner}`;
+      resultDisplay.innerText = `🎉 ابن المحظوظة هو: ${winner}`;
     }
 
     // رسم العجلة لأول مرة عند فتح الصفحة
