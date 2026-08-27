@@ -49,16 +49,20 @@
       font-weight: 800;
     }
 
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
     textarea {
       width: 100%;
       height: 90px;
-      padding: 12px;
+      padding: 12px 45px 12px 12px; /* مساحة لزر الميكروفون */
       border: 2px solid #cbd5e1;
       border-radius: 10px;
       resize: none;
       font-size: 15px;
       outline: none;
-      margin-bottom: 20px;
       transition: all 0.2s ease;
       background: rgba(255, 255, 255, 0.95);
     }
@@ -66,6 +70,42 @@
     textarea:focus {
       border-color: #10b981;
       box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    /* زر الميكروفون داخل التكست اريا */
+    .voice-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #e2e8f0;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      box-shadow: none;
+    }
+
+    .voice-btn:hover {
+      background: #cbd5e1;
+    }
+
+    /* تأثير عند التحدث/التسجيل */
+    .voice-btn.listening {
+      background: #ef4444;
+      color: white;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
     .wheel-container {
@@ -96,7 +136,7 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
 
-    button {
+    #spinBtn {
       width: 100%;
       padding: 14px;
       background: linear-gradient(135deg, #10b981, #059669);
@@ -110,15 +150,15 @@
       transition: transform 0.1s, background 0.2s;
     }
 
-    button:hover {
+    #spinBtn:hover {
       background: linear-gradient(135deg, #059669, #047857);
     }
 
-    button:active {
+    #spinBtn:active {
       transform: scale(0.98);
     }
 
-    button:disabled {
+    #spinBtn:disabled {
       background: #9ca3af;
       box-shadow: none;
       cursor: not-allowed;
@@ -138,7 +178,10 @@
   <div class="card" id="mainCard">
     <h2>قرعة مين هيتفشخ 🎯</h2>
     
-    <textarea id="namesInput" placeholder="اكتب الأسماء هنا (كل اسم في سطر)..."></textarea>
+    <div class="input-wrapper">
+      <textarea id="namesInput" placeholder="اكتب الأسماء هنا أو استخدم الميكروفون..."></textarea>
+      <button class="voice-btn" id="voiceBtn" title="إضافة أسماء بالصوت">🎤</button>
+    </div>
     
     <div class="wheel-container">
       <div class="pointer"></div>
@@ -156,6 +199,7 @@
     const ctx = canvas.getContext('2d');
     const namesInput = document.getElementById('namesInput');
     const spinBtn = document.getElementById('spinBtn');
+    const voiceBtn = document.getElementById('voiceBtn');
     const resultDisplay = document.getElementById('resultDisplay');
 
     // إخفاء وإظهار الكارت عند الضغط خارج المساحة الخاصة به
@@ -170,17 +214,62 @@
     let currentAngle = 0;
     let isSpinning = false;
 
-    // تحميل الأسماء المحفوظة سابقاً إن وجدت
+    // تحميل الأسماء المحفوظة سابقاً
     const savedNames = localStorage.getItem('sakr_wheel_names');
     if (savedNames) {
       namesInput.value = savedNames;
     }
 
-    // حفظ الأسماء ورسم العجلة فور كتابة أي حرف
-    namesInput.addEventListener('input', () => {
+    // حفظ الأسماء وإعادة الرسم عند التغيير
+    namesInput.addEventListener('input', saveAndDraw);
+
+    function saveAndDraw() {
       localStorage.setItem('sakr_wheel_names', namesInput.value);
       drawWheel();
-    });
+    }
+
+    // --- خاصية الإدخال الصوتي (Speech Recognition) ---
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'ar-EG'; // تعيين اللغة العربية
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      voiceBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // منع إغلاق الكارت
+        recognition.start();
+      });
+
+      recognition.onstart = () => {
+        voiceBtn.classList.add('listening');
+      };
+
+      recognition.onend = () => {
+        voiceBtn.classList.remove('listening');
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        // تقطيع الكلمات المسموعة وإضافتها كل اسم في سطر جديد
+        const spokenNames = transcript.split(' ').filter(n => n.trim() !== '').join('\n');
+        
+        if (namesInput.value.trim() === '') {
+          namesInput.value = spokenNames;
+        } else {
+          namesInput.value += '\n' + spokenNames;
+        }
+
+        saveAndDraw();
+      };
+
+      recognition.onerror = () => {
+        voiceBtn.classList.remove('listening');
+      };
+    } else {
+      voiceBtn.style.display = 'none'; // إخفاء الزر إذا كان المتصفح لا يدعم الميكروفون
+    }
 
     function getNames() {
       return namesInput.value.split('\n').map(name => name.trim()).filter(name => name !== '');
