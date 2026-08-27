@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عجلة حظ - قرعة مين هيتفشخ</title>
+  <title>عجلة حظ الأصدقاء 🎯</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
-      background-color: #f4f6f8;
+      /* خلفية الصورة مع طبقة داكنة خفيفة لتوضيح المحتوى */
+      background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('bg.jpg') no-repeat center center fixed;
+      background-size: cover;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,109 +24,122 @@
     }
 
     .card {
-      background: #ffffff;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     h2 {
-      margin-bottom: 15px;
-      color: #1a1a1a;
+      margin-bottom: 18px;
+      color: #1e293b;
+      font-size: 24px;
+      font-weight: 800;
     }
 
     textarea {
       width: 100%;
-      height: 100px;
+      height: 90px;
       padding: 12px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
       resize: none;
       font-size: 15px;
       outline: none;
-      margin-bottom: 15px;
-      transition: border-color 0.2s;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.9);
     }
 
     textarea:focus {
       border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
     }
 
     .wheel-container {
       position: relative;
-      width: 300px;
-      height: 300px;
+      width: 280px;
+      height: 280px;
       margin: 0 auto 20px auto;
     }
 
-    /* المؤشر السهم علوي */
+    /* السهم العلوي */
     .pointer {
       position: absolute;
-      top: -10px;
+      top: -12px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 25px solid #ef4444;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 24px solid #ef4444;
       z-index: 10;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
     canvas {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     }
 
     button {
       width: 100%;
       padding: 14px;
-      background-color: #10b981;
+      background: linear-gradient(135deg, #10b981, #059669);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 17px;
+      border-radius: 10px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.2s;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: transform 0.1s, background 0.2s;
     }
 
     button:hover {
-      background-color: #059669;
+      background: linear-gradient(135deg, #059669, #047857);
+    }
+
+    button:active {
+      transform: scale(0.98);
     }
 
     button:disabled {
-      background-color: #9ca3af;
+      background: #9ca3af;
+      box-shadow: none;
       cursor: not-allowed;
     }
 
     .result {
-      margin-top: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #ef4444;
-      min-height: 30px;
+      margin-top: 18px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #dc2626;
+      min-height: 32px;
     }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h2>قرعة مين هيتفشخ 🎯</h2>
+    <h2>قرعة الأصدقاء 🎯</h2>
     
-    <textarea id="namesInput" placeholder="اكتب الأسماء هنا، واجعل كل اسم في سطر جديد..."></textarea>
+    <textarea id="namesInput" placeholder="اكتب الأسماء هنا (كل اسم في سطر)...">أحمد&#10;محمد&#10;إسلام</textarea>
     
     <div class="wheel-container">
       <div class="pointer"></div>
-      <canvas id="wheelCanvas" width="300" height="300"></canvas>
+      <canvas id="wheelCanvas" width="280" height="280"></canvas>
     </div>
 
-    <button id="spinBtn" onclick="spinWheel()">لف العجلة واخترمين هيتفشخ !</button>
+    <button id="spinBtn" onclick="spinWheel()">لف العجلة!</button>
 
     <div class="result" id="resultDisplay"></div>
   </div>
@@ -141,7 +156,6 @@
     let currentAngle = 0;
     let isSpinning = false;
 
-    // استرجاع القوائم عند كتابة أي شيء
     namesInput.addEventListener('input', drawWheel);
 
     function getNames() {
@@ -154,13 +168,13 @@
 
       if (names.length === 0) {
         ctx.beginPath();
-        ctx.arc(150, 150, 140, 0, 2 * Math.PI);
-        ctx.fillStyle = '#e5e7eb';
+        ctx.arc(140, 140, 130, 0, 2 * Math.PI);
+        ctx.fillStyle = '#e2e8f0';
         ctx.fill();
-        ctx.fillStyle = '#9ca3af';
+        ctx.fillStyle = '#64748b';
         ctx.font = '16px system-ui';
         ctx.textAlign = 'center';
-        ctx.fillText('أدخل الأسماء أولاً', 150, 155);
+        ctx.fillText('أدخل الأسماء أولاً', 140, 145);
         return;
       }
 
@@ -169,23 +183,25 @@
       names.forEach((name, index) => {
         const angle = currentAngle + index * arcSize;
 
-        // رسم قطاع العجلة
+        // رسم قطاعات العجلة
         ctx.beginPath();
         ctx.fillStyle = colors[index % colors.length];
-        ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 140, angle, angle + arcSize);
-        ctx.lineTo(150, 150);
+        ctx.moveTo(140, 140);
+        ctx.arc(140, 140, 130, angle, angle + arcSize);
+        ctx.lineTo(140, 140);
         ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
         ctx.stroke();
 
-        // كتابة النص داخل القطاع
+        // كتابة الأسماء
         ctx.save();
-        ctx.translate(150, 150);
+        ctx.translate(140, 140);
         ctx.rotate(angle + arcSize / 2);
         ctx.textAlign = 'right';
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 15px system-ui';
-        ctx.fillText(name, 120, 5);
+        ctx.fillText(name, 110, 5);
         ctx.restore();
       });
     }
@@ -202,8 +218,8 @@
       spinBtn.disabled = true;
       resultDisplay.innerText = '';
 
-      const spinAngle = Math.random() * 10 + 20; // زاوية سرعة الدوران
-      const spinTimeTotal = Math.random() * 8000 + 12000; // وقت الدوران (4-7 ثوانٍ)
+      const spinAngle = Math.random() * 10 + 20;
+      const spinTimeTotal = Math.random() * 3000 + 4000;
       let spinTime = 0;
 
       function rotate() {
@@ -213,7 +229,6 @@
           return;
         }
 
-        // إبطاء التدريجي لحركة العجلة (Easing Out)
         const progress = spinTime / spinTimeTotal;
         const easeOut = Math.pow(progress - 1, 3) + 1;
         currentAngle += (spinAngle * (1 - easeOut)) * (Math.PI / 180);
@@ -232,17 +247,15 @@
       const names = getNames();
       const arcSize = (2 * Math.PI) / names.length;
       
-      // حساب القطاع الفائز بناءً على السهم العلوي (عند -90 درجة أو 1.5 * PI)
       let normalizedAngle = (3 * Math.PI / 2 - currentAngle) % (2 * Math.PI);
       if (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
 
       const winningIndex = Math.floor(normalizedAngle / arcSize);
       const winner = names[winningIndex];
 
-      resultDisplay.innerText = `🎉 ابن المحظوظة هو: ${winner}`;
+      resultDisplay.innerText = `🎉 الفائز هو: ${winner}`;
     }
 
-    // رسم العجلة لأول مرة عند فتح الصفحة
     drawWheel();
   </script>
 </body>
