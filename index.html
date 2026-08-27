@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عجلة حظ الأصدقاء 🎯</title>
+  <title>مين هيتفشخ 🎯</title>
   <style>
     * {
       box-sizing: border-box;
@@ -130,16 +130,16 @@
 <body>
 
   <div class="card">
-    <h2>قرعة الأصدقاء 🎯</h2>
+    <h2>قرعة مين هيتفشخ 🎯</h2>
     
-    <textarea id="namesInput" placeholder="اكتب الأسماء هنا (كل اسم في سطر)...">أحمد&#10;محمد&#10;إسلام</textarea>
+    <textarea id="namesInput" placeholder="اكتب الأسماء هنا (كل اسم في سطر)..."></textarea>
     
     <div class="wheel-container">
       <div class="pointer"></div>
       <canvas id="wheelCanvas" width="280" height="280"></canvas>
     </div>
 
-    <button id="spinBtn" onclick="spinWheel()">لف العجلة!</button>
+    <button id="spinBtn" onclick="spinWheel()">لف العجلة واعرف مين هيتفشخ!</button>
 
     <div class="result" id="resultDisplay"></div>
   </div>
@@ -174,7 +174,7 @@
         ctx.fillStyle = '#64748b';
         ctx.font = '16px system-ui';
         ctx.textAlign = 'center';
-        ctx.fillText('أدخل الأسماء أولاً', 140, 145);
+        ctx.fillText('هتستعبط', 140, 145);
         return;
       }
 
@@ -209,7 +209,7 @@
     function spinWheel() {
       const names = getNames();
       if (names.length < 2) {
-        alert('يرجى إدخال اسمين على الأقل لبدء القرعة!');
+        alert('هتستعبط!');
         return;
       }
 
@@ -253,7 +253,7 @@
       const winningIndex = Math.floor(normalizedAngle / arcSize);
       const winner = names[winningIndex];
 
-      resultDisplay.innerText = `🎉 الفائز هو: ${winner}`;
+      resultDisplay.innerText = `🎉 ابن المحظوظة هو: ${winner}`;
     }
 
     drawWheel();
